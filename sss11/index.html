@@ -1,0 +1,643 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Full paper presentation</title>
+
+    <meta name="description" content="Combining integration with walking conditions in urban routes - development of a test model">
+    <meta name="author" content="Júlio César Luta">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/modified.css" id="theme">
+
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Equations -->
+    <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+    <script type="text/javascript" async
+            src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <section data-background="rgba(255, 255, 255, 1">
+                <img class="plain" data-src="imgs/SSS11.png" alt="SSS11 Cover">
+
+                <aside class="notes">
+                    Good afternoon and thank you for your presence.
+                    I'm Júlio Luta and I'll be presenting the article "Combining integration with walking conditions in urban routes:
+                    development of a test model".
+                    <br>This article is the result of the work developed during my Dissertation for Architecture Integrated Masters here in Instituto Superior Técnico, with Professors Francisco Regateiro and Teresa Heitor.
+                </aside>
+            </section>
+
+            <section class="chapter" data-background="rgba(0, 157, 224, 1)">
+                <h2>Introduction</h2>
+
+                <aside class="notes">I'll talk about the motivations for this work and how the presentation is structured.</aside>
+            </section>
+
+            <section>
+                <img class="plain" data-src="imgs/summercity.png" alt="Google Maps Cartoon">
+
+                <aside class="notes">
+                    Current route generators already provide help for pedestrians regarding time estimating. However, routes often matter more than just the time to be travelled and each person has different personal motivations and physical conditions.
+					<br>As a contribute in this direction, the model we bring doesn’t look for the route with most air conditioning like the chicken in the cartoon, but will consider other elements.
+                </aside>
+            </section>
+
+            <section class="page">
+                <h3>Walking conditions</h3>
+                <h3 class="fragment">Personal motivations</h3>
+                <h3 class="fragment">Route generation</h3>
+                <h3 class="fragment">New outputs</h3>
+
+                <aside class="notes">
+                    We will consider slope, sun exposition, and integration as walking conditions to route generation, all to address different and possible personal motivations and physical limitations. We used integration as an possibility, not to take a side in closeness vs betweenness.
+                    <br>Our model will generate original routes considering these walking conditions and meeting the personal motivations.
+                    <br>Other than the usual outputs, time and distance, the model will also calculate the average integration and total energy expenditure for each generated route. We believe these tools can further increase their role promoting walking.
+                </aside>
+            </section>
+
+            <section class="page">
+                <h3>Building the model</h3>
+                <h3 class="fragment">Testing the model</h3>
+                <h3 class="fragment">Results</h3>
+                <h3 class="fragment">Conclusions</h3>
+
+                <aside class="notes">
+                    Next I'll show how we built the model
+                    <br>how the model was tested
+                    <br>the results in two case studies
+                    <br>and the conclusions.
+                </aside>
+            </section>
+
+            <section class="chapter" data-background="rgba(0, 157, 224, 1)">
+                <h2>Building the model</h2>
+                <aside class="notes">
+                    Step by step how we built the model.
+                </aside>
+            </section>
+
+            <section class="page">
+                <h3>Pedestrian travel network</h3>
+                <p>We used as base a previously developed model of a pedestrian travel network (Gonçalves et al., 2015) and <span class="color">added several characterization aspects</span> to the already digitized footpaths using a GIS application.</p>
+
+                <aside class="notes">
+                    Having access to a previously developed model of a pedestrian travel network, we started from it and added several characterization aspects to this network using ArcGIS.
+                    <br>This network was kindly shared for the dissertation development by Paulo Cambra and Professors Filipe Moura and Alexandre Gonçalves.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/arcosLegenda.png">
+                <h6><span>Existing pedestrian travel network</span></h6>
+
+                <aside class="notes">
+                    Shown here the mentioned pedestrian network that uses sidewalks, crosswalks and other pedestrian paths instead of the road network.
+                    <br>Most values will be calculated using the start and ending points of each segment, so these segments were divided it into smaller ones looking for the right granularity for the network.
+                    <br>The pedestrian crossings are part of the network and have further characterization.
+                </aside>
+            </section>
+
+            <section class="page">
+                <h3>Pedestrian<br>crossings</h3>
+                <p class="spaced">&nbsp;</p>
+                <img class="plain side stretch" data-src="imgs/beatles.jpg" alt="Abbey Road cover">
+
+                <aside class="notes">
+                    The pedestrian crossings are divided into: signalized, zebra and informal crossings.
+                    <br>For zebra and informal crossings we considered that there was no waiting time but only a three second delay caused by interrupting and resuming walking.
+                    <br>For most signalized crossings the local authorities use dynamic times and do not store the green and waiting times.
+                    <br>One source used 11 seconds as waiting time for signalized crossings, but several of these crossings are divided in different parts. Since we don’t know the green times we are unable to identify the situations where there may exist stops along a crossing,  using such waiting time value could penalize the model too much. Without a correct way to characterize the signalized crosswalks, these were treated as the remaining crossings – three second delay in each part of the crossing.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/passadeiras.png">
+                <h6><span>Pedestrian crossings</span></h6>
+
+                <aside class="notes">
+                    Here are highlighted the pedestrian crossings.
+                </aside>
+            </section>
+
+            <section class="page">
+                <h3>Digital terrain model</h3>
+                <p>A digital terrain model is needed to <span class="color">add elevation to the network</span>.</p>
+
+                <aside class="notes">
+                    A digital terrain model is needed to add elevation to the network, which is necessary to calculate the slope and walking speed.
+                    <br>Represented as a raster, the size of its cells is important. If it has insufficient spatial resolution it could result in too many smaller segments with no slope. And segments too close to the cell limits could end up with an incorrect slope. At the end, a new DTM was created with one meter resolution, 100 times bigger resolution than the initially available one.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/pontos.png">
+                <h6><span>Elevation points</span></h6>
+
+                <aside class="notes">
+                    Here shown the elevation points used to create the terrain model.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/linhasEescarpa.png">
+                <h6><span>Contour and cliff lines</span></h6>
+
+                <aside class="notes">
+                    And here in red the used countour lines and in green some examples of cliff lines.
+                    <br>Cliff lines were important to improve the network's elevation by allowing viaducts and important walls to be represented.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/terreno.png">
+                <h6><span>Created digital terrain model</span></h6>
+
+                <aside class="notes">
+                    The raster file was created in ArcGIS and is visible here.
+                </aside>
+            </section>
+
+            <section class="page">
+                <h3>Footpaths’ slope</h3>
+                <p>After adding elevation to the network the footpaths' slope was calculated.</p>
+
+                <aside class="notes">
+                    After adding elevation to the network the footpaths' slope was calculated which allows us to continue characterizing the network.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/decliveLegenda2.png">
+                <h6><span>Slope [%]</span></h6>
+
+                <aside class="notes">
+                    In this example we have the graphical representation of the pedestrian network according to its slope - measured in percentage and translated in slope intervals.
+                </aside>
+            </section>
+
+            <!--<section class="legend" data-background="imgs/decliveDonut.png">
+                <h6><span>Slope [%]</span></h6>
+
+                <aside class="notes">
+                    This data can be taken and used for further analysis. In this slide we quantify each slope interval. For each one we have it's size in percentage and the accumulated values, all seen in the right side. For example, segments with a slope equal or lower than eight% represent 83.4% of the pedestrian network.
+                </aside>
+            </section>-->
+
+            <section class="page">
+                <h3>Walking speed</h3>
+                <p>The walking speed was calculated according to the slope, using <span class="color">Tobler’s</span> equation (1993). Additionally, the speed for walking up and down stairs was calculated following Fruin’s work (1987).</p>
+                <!--<p>$$V\:=\:6\:e^{-3.5\:\cdot\:\left|\:D\:+\:0.05\:\right|}$$</p>-->
+                <aside class="notes">
+                    In the next step, to calculate the walking speed we used the Tobler equation that considers any slope. For a null slope the result of the equation is close to the values found in several sources.
+                    <br>Fruin mentions that the average speed of climbing stairs is about one third of the walking speed without any slope, and that going down the stairs speed increases by 10%.
+                </aside>
+            </section>
+
+            <section class="page">
+                <h3>Pedestrian physical effort</h3>
+                <p>In terms of speed, slope, or both it is possible to estimate the oxygen consumption, which allows the <span class="color">calculation of calorie expenditure</span>.</p>
+
+                <aside class="notes">
+                    In terms of speed, slope, or both it is possible to estimate the oxygen consumption, which allows the calculation of calorie expenditure. To calculate the calories an equation was estimated using the ﬁndings of Yamazaki and colleagues.
+                </aside>
+            </section>
+
+            <section class="page">
+                <h3>Buildings and shading modelling</h3>
+                <p>To represent <span class="color">summer</span> and <span class="color">winter</span>, one day for each season was modelled.</p>
+
+                <aside class="notes">
+                    To represent summer and winter, one day for each season was modelled.
+                    <br>To model the shading at street level it was first necessary to model the edification.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/3D.png">
+                <h6><span>Modelled buildings</span></h6>
+
+                <aside class="notes">
+                    The modelled buildings are limited to part of the network's area. To the North by Avenida Elias Garcia and Avenida de António José de Almeida, the West by Rua Marquês Sá da Bandeira, to the South by Rua Tomás Ribeiro, Rua Almirante Barroso and  Rua Pascoal de Melo, and the East by Avenida Almirante Reis.
+                    <br>The buildings were modelled first in AutoCAD and then ArcGIS.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/3D2.png">
+                <h6><span>Modelled shading - winter 11h</span></h6>
+
+                <aside class="notes">
+                    For the day representing the winter, the shading was created for five instants of the day and for summer six were created.
+                    <br>The main reason for this choice was due to the fact that the pedestrian paths represented were always short and in which the movement of the Sun was ignored.
+                </aside>
+            </section>
+
+            <section class="page">
+                <h3>Shaded footpaths</h3>
+                <p>In the sun, partially and fully shaded footpaths were identified.</p>
+
+                <aside class="notes">For each moment of the day the partially and fully shaded footpaths and the ones in the sun were identified.</aside>
+            </section>
+
+            <section class="legend" data-background="imgs/sombrasolLegenda2.png">
+                <h6><span>Shaded footpaths for winter 11h </span><span class="amarelo">sun </span><span class="cinzento">partial </span><span>shade</span></h6>
+
+                <aside class="notes">
+                    As an example, the shading for winter at 11h. In yellow the segments in the sun, in white the shaded ones and in grey the partially shaded.
+                </aside>
+            </section>
+
+            <section class="page">
+                <h3>Integration</h3>
+                <p>Axial lines were used in DepthMap to create a <span class="color">segment analysis</span> which used the following radius: n, 1200m, 800m and 400m. The segments and its values were imported into the GIS application.</p>
+
+                <aside class="notes">
+                    To add integration to the model, axial lines were used in DepthMap to create a segment analysis which used the following radius: n, 1200m, 800m and 400m. The segments and its values were imported into the GIS application and were associated with the built pedestrian network.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/integracaoLegenda2.png">
+                <h6><span>Segments - Integration R1200m</span></h6>
+
+                <aside class="notes">
+                    Here the segment analysis for a three kilometer radius area centered in Saldanha.
+                    <br>Shown here with the 1200m radius values.
+                    <br>The pedestrian network has this size for comparison.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/integracao2Legenda2.png">
+                <h6><span>Pedestrian Network - Integration R1200m</span></h6>
+
+                <aside class="notes">
+                    Using the segments analysis, the pedestrian network had the integration values associated using angle and distance spatial relationships.
+                    <br>For each path of the pedestrian network the segment with the most similar angle was found inside a small distance buffer and had its integration value associated to the path.
+                </aside>
+            </section>
+
+            <!--<section class="page">
+                <h3>Network database</h3>
+                <p>Using the pedestrian footpaths and its <span class="color">stored values</span> the <span class="color">model costs</span> were selected and created.</p>
+
+                <aside class="notes">
+                    A pedestrian route may be generated according to distance, oxygen consumption, time ignoring slopes, time considering the slopes and stairs or integration. Any value that is not used as the cost can be calculated and stored.
+                    <br>Other fields were also added to the model as restrictions and descriptors. These identify the footpaths as stairs, their slope and their shade state for every modeled moment.
+                </aside>
+            </section>-->
+
+            <!--<section class="chapter" data-background="rgba(0, 157, 224, 1)">
+                <h2>Measuring and using the model</h2>
+
+                <aside class="notes">
+                    The pedestrian network has a segment average length of 7.79 meters with a standard deviation of 2.52 meters, in a total of 21393 segments which together measure 166693 meters. For each calculated ﬁeld we stored two values, one in each direction of the footpath. Therefore it is possible to calculate all results in both directions, which is essential to identify the eﬀect of slopes in pedestrian walking.
+                </aside>
+            </section>-->
+
+            <section class="page">
+                <h3>Route generation</h3>
+                <p>At least two locations must be added, representing the <span class="color">starting point</span> and <span class="color">destination</span>.</p>
+                <p>The pedestrian routes may be generated according to the integration, distance or time.</p>
+
+                <aside class="notes">
+                    To generate the routes we used ArcGIS Network Analyst.
+                    <br>At least two locations must be added, representing the starting point and destination.
+                    <br>The pedestrian routes may be generated according to the integration, distance and time. Any value that is not used as the cost can be calculated and given as output. And slopes and shading can filter or penalize pedestrian paths without changing these outputs. For example, we can use the model to penalize paths in the sun during summer, to make it look for the shaded ones, but the walking speed stays the same.
+                </aside>
+            </section>
+
+            <section class="chapter" data-background="rgba(0, 157, 224, 1)">
+                <h2>Testing the model</h2>
+
+                <aside class="notes">
+                    Three different sets of tests were carried out as a proof of concept of how the model should be validated in the future.
+                </aside>
+            </section>
+
+            <section class="page">
+                <h3>Walking time</h3>
+                <p>The generated routes' walking time was compared with Google Maps’ (2017) walking time.</p>
+
+                <aside class="notes">
+                    For several routes the walking time was compared with Google Maps’ walking time. From all routes generated in the case studies, 20 unique ones were identified and created in Google Maps, using when necessary additional destinations to force the route’s geometry.
+                    <br>Five routes were unable to be reproduced due to the absence of Av. Praia da Vitória at the time. With a sample of 15 routes the average difference between the model and Google Maps is 35s or 3.89% with a standard deviation of 24s or 2.23%.
+                </aside>
+            </section>
+
+            <section class="page">
+                <h3>Energy expenditure</h3>
+                <p>The model’s energy expenditure results were compared with the results of two different commercial solutions, Samsung Gear Fit smartwatch and MapMyWalk (2017) fitness tracking application.</p>
+
+                <aside class="notes">
+                    The model’s energy expenditure results were compared with the results of two different commercial solutions, Samsung Gear Fit smartwatch and MapMyWalk fitness tracking application.
+                    <br>Eight different routes (four in both directions) were measured several times with either solution. 15 measurements were used and compared giving an average difference of 8kilocalorie or 13.29% and a standard deviation of 8kcal or 12.54%.
+                </aside>
+            </section>
+
+            <section class="page">
+                <h3>Shading</h3>
+                <p>To compare the shading measures no other model or application was found, and therefore the model results were validated on site.</p>
+
+                <aside class="notes">
+                    To compare the shading measures no other model or application was found, and the model results were validated on site with several visits to distinct locations at different times.
+                    <br>The results were mostly positive with 54 locations having shaded pedestrian paths similar to the model results, and in only two locations the same cannot be said.
+                </aside>
+            </section>
+
+            <section class="chapter" data-background="rgba(0, 157, 224, 1)">
+                <h2>Results</h2>
+
+                <aside class="notes">
+                    The results are divided in two case studies.
+                </aside>
+            </section>
+
+            <section class="page">
+                <h3>First case study</h3>
+                <p>The first case study will provide some insights about the incremental use of the calculated values and will demonstrate the slope consequences on the route generation.</p>
+
+                <aside class="notes">
+                    The first case study will provide some insights about the incremental use of the calculated values and will demonstrate the slope consequences on the route generation.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/AC00.png">
+                <h6><span>Alameda Subway and Civil Pavilion entrances</span></h6>
+
+                <aside class="notes">
+                    Visible here the two locations representing the starting point in Alameda and the destination in Instituto Superior Técnico.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/AC01.png">
+                <h6><span>Alameda-Civil, ignoring slopes: </span><span class="laranja">658m 470s</span></h6>
+
+                <aside class="notes">
+                    The first route was created ignoring slope effect on walking speed.
+					<br>It's 658 meters long and takes close to eight minutes.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/AC01.png">
+                <h6><span>Factoring slopes: 658m 575s </span><span class="laranja">+105s </span><span>154ml/kg 54kcal</span></h6>
+
+                <aside class="notes">
+                    The second route considered the slope effect and it has the same shape, but this one takes about 10 minutes. The expected oxygen consumption and energy expenditure are visible. 54 kilocalories
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/AC02.png">
+                <h6><span>Factoring slopes and stairs:<br>700m </span><span class="laranja">+42m</span><span> 595s </span><span class="laranja">+20s</span><span> 153ml/kg 54kcal</span></h6>
+
+                <aside class="notes">
+                    The third route considered slope and stair effects and has a different shape shown in orange. It's 42 meters and 20 seconds longer than the previous one shown in blue.
+                </aside>
+
+                <aside class="notes"></aside>
+            </section>
+
+            <section class="legend" data-background="imgs/AC02.png">
+                <h6><span>Factoring slopes, stairs and crossings:<br>700m 610s </span><span class="laranja">+15s</span><span> 153ml/kg 54kcal</span></h6>
+
+                <aside class="notes">
+                    To calculate the fourth route, pedestrian crossings were added, with the correspondent time penalty. This adds 15 seconds.
+                    <br>This is the first route using all effects and all following ones will only consider these complete application.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/AC02.png">
+                <h6><span>Reversed:<br>700m 486s </span><span class="laranja">-124s</span><span> 111ml/kg </span><span class="laranja">-42ml/kg</span><span> 39kcal </span><span class="laranja">-15kcal</span></h6>
+
+                <aside class="notes">Reversing the starting point and destination the same route is generated but the time drops to eight minutes, as the walking speed is higher going down hill on the same path.
+				<br>The calorie expenditure drops to 39 kilocalories.</aside>
+            </section>
+
+            <section class="legend" data-background="imgs/AC03.png">
+                <h6><span>Stairs prohibited, heavily avoid slopes higher than 8%:<br>876m </span><span class="laranja">+176m</span><span> 738s </span><span class="laranja">+128s</span><span> 186ml/kg </span><span class="laranja">+33ml/kg</span><span> 65kcal </span><span class="laranja">+11kcal</span></h6>
+
+                <aside class="notes">To demonstrate other slope consequences a route was generated where stairs are prohibited and slopes higher than 8% are heavily penalized - the model tried to avoided them.
+				<br>Shown in orange, this route is 876 meters long and takes a bit more than 12 minutes and 65 kilocalories.</aside>
+            </section>
+
+            <section class="legend" data-background="imgs/AC04.png">
+                <h6><span>Stairs and slopes higher than 9% prohibited: 1326m </span><span class="laranja">+626m</span><span> 1053s </span><span class="laranja">+443s</span><span> 269ml/kg </span><span class="laranja">+116ml/kg</span><span> 94kcal </span><span class="laranja">+40kcal</span></h6>
+
+                <aside class="notes">If instead of adding penalties these slopes are prohibited the model cannot find a route. But changing the threshold to 9% a solution is found.
+                <br>In orange the differences to the original route shown in blue.
+				<br>It takes more than 17 minutes and a half and 95 kilocalories.</aside>
+            </section>
+
+            <section class="legend" data-background="imgs/GoogleAC.png">
+                <h6><span>Routes created by Google Maps (2017)</span></h6>
+
+                <aside class="notes">
+                    The fastest route created by Google Maps is not given as a solution in our model. This route uses informal pedestrian crossings which are not modelled, since not only they would be too close to existing pedestrian crossings, but can also be considered dangerous. <br>Google Maps’ second fastest route created has the same geometry, distance and time as the route created by our model - 10min and 700m.
+                </aside>
+            </section>
+
+            <section class="page">
+                <h3>Second case study</h3>
+                <p>Several routes were created, between Avenida Conde Valbom and Jardim Cesário Verde, using as restrictions the shading and later the integration.</p>
+
+                <aside class="notes">
+                    In the second case study several routes were created using as restrictions the shading and later the integration.
+                    <br>We divided the results in two distinct case studies because the first location has characteristics that better demonstrates the slope consequences and this second location has a wider range of street orientation and width.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/CVE01.png">
+                <h6><span>Conde Valbom-Estefânia: 1185m 896s 219ml/kg 76kcal</span></h6>
+
+                <aside class="notes">
+                    The first route was generated considering the slope, stair, and pedestrian crossings effects and is used to benchmark the remaining routes
+                    <br>This route has roughly the same shape, length and time as the solution given by Google Maps: 15min and 1.2km.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/CVE02.png">
+                <h6><span>Winter 09h </span><span class="amarelo">sun </span><span class="cinzento">partial </span><span>shade</span><br><span>1213m </span><span class="laranja">+28m</span><span> 914s </span><span class="laranja">+18s</span><span> 224ml/kg </span><span class="laranja">+5ml/kg</span><span> 78kcal </span><span class="laranja">+2kcal</span></h6>
+
+                <aside class="notes">
+                    For winter routes the shaded footpaths were moderately penalized. This first route, shown in red, is for 9am.
+                    <br>In orange we continue to see the differences to the original route, here shown in dark red.
+                    <br>As before, we have in yellow the paths in the sun and in white the shaded ones for each specific time of the day.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/CVE03.png">
+                <h6><span>Heavily penalized winter 09h: 1312m </span><span class="laranja">+127m</span><span> 1008s </span><span class="laranja">+112s</span><span> 243ml/kg </span><span class="laranja">+24ml/kg</span><span> 85kcal </span><span class="laranja">+9kcal</span></h6>
+
+                <aside class="notes">
+                    To simulate situations where the shade in winter is to be avoided at higher costs, a new route for 9am was generated with increased penalties.
+                    <br>The new route goes all the way to Avenida Casal Ribeiro looking for that bit of Sun.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/CVE04.png">
+                <h6><span>Winter 11h </span><span class="amarelo">sun </span><span class="cinzento">partial </span><span>shade</span><br><span>1232m </span><span class="laranja">+47m</span><span> 946s </span><span class="laranja">+50s</span><span> 228ml/kg </span><span class="laranja">+9ml/kg</span><span> 80kcal </span><span class="laranja">+4kcal</span></h6>
+
+                <aside class="notes">
+                    Keeping the original penalty at 11am a new route is generated.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/CVE05.png">
+                <h6><span>Winter 13h </span><span class="amarelo">sun </span><span class="cinzento">partial </span><span>shade</span><br><span>1205m </span><span class="laranja">+20m</span><span> 920s </span><span class="laranja">+24s</span><span> 222ml/kg </span><span class="laranja">+3ml/kg</span><span> 78kcal </span><span class="laranja">+2kcal</span></h6>
+
+                <aside class="notes">
+                    At 1pm a route is generated that goes through the sunny Praça Duque de Saldanha.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/CVE06.png">
+                <h6><span>Winter 15h </span><span class="amarelo">sun </span><span class="cinzento">partial </span><span>shade</span><br><span>1295m </span><span class="laranja">+110m</span><span> 984s </span><span class="laranja">+88s</span><span> 241ml/kg </span><span class="laranja">+22ml/kg</span><span> 84kcal </span><span class="laranja">+8kcal</span></h6>
+
+                <aside class="notes">
+                    At 3pm the sun is sought on the east sidewalk of Avenida da República.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/CVE07.png">
+                <h6><span>Winter 17h </span><span class="amarelo">sun </span><span class="cinzento">partial </span><span>shade</span><br><span>1185m</span><span> 896s</span><span> 219ml/kg </span><span> 76kcal</span></h6>
+
+                <aside class="notes">
+                    At 5 pm there are no changes to the initial route since most of the network has no sun.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/CVE08.png">
+                <h6><span>Summer 09h </span><span class="amarelo">sun </span><span class="cinzento">partial </span><span>shade</span><br><span>1303m </span><span class="laranja">+118m</span><span> 990s </span><span class="laranja">+94s</span><span> 242ml/kg </span><span class="laranja">+23ml/kg</span><span> 85kcal </span><span class="laranja">+9kcal</span></h6>
+
+                <aside class="notes">
+                    In summer routes the logic is reversed, and the footpaths in the sun are penalized.
+                    <p>At 9am the generated route is almost fully shaded.</p>
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/CVE09.png">
+                <h6><span>Summer 11h </span><span class="amarelo">sun </span><span class="cinzento">partial </span><span>shade</span><br><span>1229m </span><span class="laranja">+44m</span><span> 930s </span><span class="laranja">+34s</span><span> 228ml/kg </span><span class="laranja">+9ml/kg</span><span> 80kcal </span><span class="laranja">+4kcal</span></h6>
+
+            </section>
+
+            <section class="legend" data-background="imgs/CVE10.png">
+                <h6><span>Summer 13h </span><span class="amarelo">sun </span><span class="cinzento">partial </span><span>shade</span><br><span>1242m </span><span class="laranja">+57m</span><span> 934s </span><span class="laranja">+38s</span><span> 229ml/kg </span><span class="laranja">+10ml/kg</span><span> 80kcal </span><span class="laranja">+4kcal</span></h6>
+            </section>
+
+            <section class="legend" data-background="imgs/CVE11.png">
+                <h6><span>Summer 15h </span><span class="amarelo">sun </span><span class="cinzento">partial </span><span>shade</span><br><span>1223m </span><span class="laranja">+38m</span><span> 927s </span><span class="laranja">+31s</span><span> 225ml/kg </span><span class="laranja">+6ml/kg</span><span> 79kcal </span><span class="laranja">+3kcal</span></h6>
+            </section>
+
+            <section class="legend" data-background="imgs/CVE12.png">
+                <h6><span>Summer 17h </span><span class="amarelo">sun </span><span class="cinzento">partial </span><span>shade</span><br><span>1217m </span><span class="laranja">+32m</span><span> 917s </span><span class="laranja">+21s</span><span> 225ml/kg </span><span class="laranja">+6ml/kg</span><span> 79kcal </span><span class="laranja">+3kcal</span></h6>
+            </section>
+
+            <section class="legend" data-background="imgs/CVE13.png">
+                <h6><span>Summer 19h </span><span class="amarelo">sun </span><span class="cinzento">partial </span><span>shade</span><br><span>1235m </span><span class="laranja">+50m</span><span> 942s </span><span class="laranja">+46s</span><span> 228ml/kg </span><span class="laranja">+9ml/kg</span><span> 80kcal </span><span class="laranja">+4kcal</span></h6>
+            </section>
+
+            <section class="legend" data-background="imgs/CVE14.png">
+                <h6><span>Least Integrated: 1265m 1009s 81kcal 338 avg. integration</span><br>
+                    <span class="color">Most Integrated: 1214m 941s 78kcal 402 avg. integration</span></h6>
+
+                <aside class="notes">
+                    The 1200m value for the integration radius is chosen due to its proximity to the length of these routes. Each route’s integration is calculated as a weighted average of all included footpaths and this value is used to generate the route.
+                    <br>In white... in blue...
+                </aside>
+            </section>
+
+            <section class="chapter" data-background="rgba(0, 157, 224, 1)">
+                <h2>Conclusions</h2>
+
+            </section>
+			
+			<section class="page">
+                <h3>Achievements:</h3>
+                <h3 class="fragment">.Walking conditions</h3>
+                <h3 class="fragment">.Personal motivations</h3>
+				<h3 class="fragment">.New routes and outputs</h3>
+				<h3 class="fragment">.Testing</h3>
+
+                <aside class="notes">
+                    We used integration, slopes and sun exposition as walking conditions.
+                    <br>These addressed possible personal motivations and were used to define the routing process.
+                    <br>We created original routes with these walking conditions. And new outputs, such as integration and energy expenditure.
+                    <br>And our testing showed that not only we can create the same routes as Google Maps, but also that these and the new ones we created have similar times as Google Maps'.
+                </aside>
+            </section>
+
+            <section class="page">
+                <h3>Future work:</h3>
+                <h3 class="fragment">.Integration</h3>
+                <h3 class="fragment">.Shading</h3>
+                <h3 class="fragment">.Crosswalks</h3>
+                <h3 class="fragment">.Energy expenditure</h3>
+                <h3 class="fragment">.Model validation</h3>
+
+                <aside class="notes">
+                    We only explored starting ideas and surely integration values can be used in additional and different ways in the route creation algorithm, identifying and testing them should be considered as future work, as should identifying the users motivations behind these metrics.
+                    <br>The presence of shaded footpaths and its use brought relevant results and encourages the continuation of its development, since we only considered the shade created by the buildings.
+                    <br>The signalized crosswalks should be further developed since they were treated like the remaining crosswalks and may be missing relevant and useful characterization.
+                    <br>Energy expenditure is a crucial metric to inform the pedestrian. It will be important in works like ours to keep up with the necessary improvements on calculating this metric.
+                    <br>And more work needs to be done to validate the model.
+                </aside>
+            </section>
+
+            <!--<section class="page">
+                <h3>Melhoramentos possíveis</h3>
+                <p>Bla bla bla Bla bla bla Bla bla bla Bla bla bla Bla bla bla Bla bla bla Bla bla bla </p>
+            </section>
+
+            <section class="page">
+                <h3>Desenvolvimentos futuros</h3>
+                <p>Bla bla bla Bla bla bla Bla bla bla Bla bla bla Bla bla bla Bla bla bla Bla bla bla </p>
+            </section>-->
+
+            <section class="chapter" data-background="rgba(255, 255, 255, 1)">
+                <h1>Thank you for your attention</h1>
+                <h5>julio.luta@tecnico.ulisboa.pt</h5>
+
+                <aside class="notes">
+                    Thank you for your attention.
+                    <p>I'll be taking your comments and questions.</p>
+                </aside>
+            </section>
+
+        </div>
+
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+    <script>
+
+        Reveal.initialize({
+
+            dependencies: [
+
+                { src: 'plugin/notes/notes.js', async: true }
+            ]
+        });
+
+    </script>
+
+</body>
+</html>
