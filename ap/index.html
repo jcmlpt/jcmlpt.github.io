@@ -1,17 +1,560 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Júlio César Marques Luta - Personal Website</title>
-    <meta name="author" content="Júlio César Marques Luta">
-    <link href="css/style.css" rel="stylesheet">
+
+    <title>Apresentação Tese</title>
+
+    <meta name="description" content="Walkability - The physical metrics in an urban context">
+    <meta name="author" content="Júlio César Luta">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/modified.css" id="theme">
+
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Equations -->
+    <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+    <script type="text/javascript" async
+            src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
 </head>
 <body>
+    <div class="reveal">
+        <div class="slides">
+
+            <section data-background="rgba(255, 255, 255, 1">
+                <img class="plain" data-src="imgs/DECIVIL_COVER.png" alt="DECivil Cover">
+
+                <aside class="notes">
+                    Bom dia a todos e obrigado pela vossa presença.
+                </aside>
+            </section>
+
+            <section class="chapter" data-background="rgba(0, 157, 224, 1)">
+                <h2>Métricas físicas de deslocação pedonal em contexto urbano</h2>
+                <h4>Desenvolvimento de um modelo de teste</h4>
+
+                <aside class="notes">O trabalho métricas físicas...</aside>
+            </section>
+
+            <section class="page">
+                <h3>Tema, Objetivos e Estado da arte</h3>
+                <img class="stretch plain side" data-src="imgs/summercity2.jpg" alt="Google Maps Cartoon">
+
+                <aside class="notes">
+                    Enquadra-se nos conceitos de vida ativa e de cidade saudável, princípios complementares e integrantes das estratégias de promoção da saúde, tal como reconhecido pela Organização Mundial da Saúde.
+                    <p>Tem como principal objetivo o desenvolvimento de um modelo que permita parametrizar e comparar as condições de deslocação pedonal num centro urbano, relacionando o tempo e esforço físico despendido com as características do espaço exterior de circulacão.</p>
+                    <p>Google, Bing, Yahoo Maps, OpenStreetMaps são exemplos de aplicações que desenham rotas pedonais. No entanto baseiam-se principalmente nos eixos da rede viária. O Projeto KESUE criou uma rede pedonal e tal como a rede criada pelo Prof Alexandre Gonçalves e Filipe Moura baseia-se nos caminhos pedonais. Na criação desta rede pedonal foram criadas regras de levantamento e feita uma avaliação de caminhabilidade. O projeto Happy Maps usa dados de utilizadores para definir rotas bonitas, felizes ou calmas. Aplicações que calculem o Esforço físico à priori ou que utilizem a exposição solar não foram encontrados.</p>
+                </aside>
+            </section>
+
+            <section class="chapter" data-background="rgba(0, 157, 224, 1)">
+                <h2>Pesquisa e seleção da informação necessária</h2>
+            </section>
+
+            <section class="page">
+                <h3>Caminhos Pedonais</h3>
+                <p>Utilizada <span class="color">rede pedonal desenvolvida no IST</span> (Gonçalves et al., 2015). Não existindo um padrão para a modelação de redes pedonais este trabalho caraterizou os diversos elementos da rede.</p>
+
+                <aside class="notes">
+                    Foi utilizado como base a rede pedonal desenvolvida no IST e mencionada anteriormente. De destacar a caraterização dos atravessamentos pedonais, com regras para o desenho dos atravessamentos informais.
+                </aside>
+            </section>
+
+            <section class="page">
+                <h3>Atravessamentos Pedonais</h3>
+                <p class="spaced">&nbsp;</p>
+                <img class="plain side stretch" data-src="imgs/beatles.jpg" alt="Abbey Road cover">
+
+                <aside class="notes">
+                    Com o propósito de complementar a informação da rede pedonal foi considerado relevante detalhar o tempo de espera dos segmentos que representam os atravessamentos pedonais – formais e informais. Os atravessamentos podem estar representados num único segmento, quando não se admite a possibilidade de paragem segura a meio do atravessamento, ou em diversos segmentos, divididos por segmentos de passeio - designados e identiﬁcados como refúgios para peões.
+                    <p>A CML não tem dados sobre os tempos de verde dos atravessamentos semaforizados. Num trabalho do IST foram realizadas várias medições do tempo de espera e atravessamento de peões. Cerca de 800 medições em passadeiras semaforizadas, 355 em passadeiras zebra e 190 atravessamentos informais.</p>
+                    <p>No caso dos dois últimos tipos de atravessamento de peões foi assumido que o tempo de espera era nulo. Nas passadeiras semaforizadas o tempo médio de espera alcançado foi de 10,9 segundos.</p>
+                    <p>No entanto não foram descritas as condições das medições ou caracterizadas das passadeiras. Foi considerado que seria muito pessimista utilizar este valor para cada segmento visto que muitos atravessamentos estão separados em vários. Juntar estes segmentos traria grande incerteza, visto que sem saber os tempos de verde não é possível saber se para as várias velocidades o peão atravessa de uma vez.</p>
+                    <p>Foi encontrada uma fonte que indica que um tempo de arranque de um peão de três segundos é razoável para calcular atravessamento de peões. Não foram encontrados mais dados. Foram todos os atravessamentos tratados da mesma forma: 3 segundos para pausa e arranque do peão.</p>
+                </aside>
+            </section>
+
+            <section class="page">
+                <h3>Modelo Digital do&nbsp;Terreno</h3>
+                <p>Os modelos encontrados têm resoluções consideradas insuficientes. Para minimizar incorreções nos declives foi decidido <span class="color">desenvolver um novo modelo digital de terreno</span>.</p>
+
+                <aside class="notes">
+                    Para ser possível calcular os declives são necessários os dados altimétricos do terreno. Um modelo de terreno com resolução espacial insuﬁciente pode resultar em demasiados segmentos de menor dimensão com declive nulo, ou em segmentos com declives pouco reais quanto mais os seus pontos iniciais ou ﬁnais próximos estiverem do limite de cada célula do MDT. Por estas razões não foi utilizado o MDT com células de dez metros cedido pelo Instituto Geográﬁco Português e foi criado um novo.
+                </aside>
+            </section>
+
+            <section class="page">
+                <h3>Velocidade do Peão</h3>
+                <p>Escolhida a equação de <span class="color">Tobler</span> (1993) que considera qualquer declive D, negativo ou positivo, no cálculo da velocidade V de caminhada do peão.</p>
+                <p>$$V\:=\:6\:e^{-3.5\:\cdot\:\left|\:D\:+\:0.05\:\right|}$$</p>
+                <aside class="notes">
+                    Para calcular a velocidade de caminhada, de entre as fontes encontradas, foi utilizada a equação de Tobler que considera qualquer declive. Para um declive nulo o resultado da equação aproxima-se dos valores encontrados em diversas fontes.
+                </aside>
+            </section>
+
+            <section class="page">
+                <h3>Esforço físico do Peão</h3>
+                <p>Em função da velocidade e declive é possível estimar o consumo de oxigénio, o que permite <span class="color">calcular o gasto de calorias</span>. Foram utilizadas equações estimadas a partir de valores apresentados por Yamazaki et al. (2009). </p>
+
+                <aside class="notes">
+                    A energia consumida está associada com o esforço físico e é uma métrica bastante presente na dia-a-dia.
+                    <p>Em funcão da velocidade, do declive ou de ambos é possível estimar o consumo de oxigénio, o que permite o cálculo do gasto de calorias.</p>
+                    <p>Foram avaliadas diversas equações e correspondentes gráﬁcos antes da escolha das equações usadas no modelo desenvolvido. Estas esquações foram estimadas a partir dos dados do trabalho A New Device to Estimate VO2 during Incline Walking by Accelerometry and Barometry (Yamazaki)</p>
+                </aside>
+            </section>
+
+            <section class="chapter" data-background="rgba(0, 157, 224, 1)">
+                <h2>Tratamento da informação e criação do modelo</h2>
+            </section>
+
+            <section class="page">
+                <h3>Modelo Digital do Terreno</h3>
+                <p>Foram corrigidos os erros encontrados nos dados cartográficos. Foi necessário desenhar <span class="color">linhas de escarpa</span> para melhorar a representação do modelo.</p>
+
+                <aside class="notes">
+                    Manualmente foram localizados os elementos com cotas onde eram notórias omissões ou gafes de valores, sejam cotas com valor zero em posições onde isso não é provável e de possível veriﬁcação ou cotas cujos valores não fazem sentido. Esta correção acabou por ser bastante morosa devido à quantidade de erros, por vezes apenas encontrados após a criação do terreno, sendo assim necessário repetir o processo.
+                    <p>Para além dos pontos de cota e curvas de nível é relevante mencionar o desenho de linhas de escarpa nos viadutos representados nos dados cartográficos e dentro da área definida pela rede pedonal.</p>
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/pontos.png">
+                <h6><span>Pontos de cota</span></h6>
+            </section>
+
+            <section class="legend" data-background="imgs/linhasEescarpa.png">
+                <h6><span>Curvas de nível e linhas de escarpa</span></h6>
+            </section>
+
+            <section class="legend" data-background="imgs/terreno.png">
+                <h6><span>Modelo digital de terreno criado</span></h6>
+
+                <aside class="notes">
+                    No ArcGIS foi criado um ficheiro raster que representa o terreno num conjunto de células, cada uma com um metro quadrado.
+                </aside>
+            </section>
+
+            <section class="page">
+                <h3>Caminhos pedonais</h3>
+                <p>Foram tratados os caminhos pedonais partilhados e caraterizados em função do seu declive, velocidade e tempo de caminhada, consumo oxigénio e energia dispendida.</p>
+
+                <aside class="notes">
+                    Os caminhos pedonais foram trabalhados e caraterizados em função do declive, velocidade e tempo de caminhada, consumo oxigénio e energia dispendida.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/arcosLegenda.png">
+                <h6><span>Caminhos pedonais partilhados</span></h6>
+
+                <aside class="notes">
+                    Primeiro procedeu-se à procura de segmentos soltos e que pudessem causar falhas na continuidade da rede. Posteriormente foram os segmentos divididos nas suas interseções, convertidos para polilinhas que conseguem armazenar coordenadas Z e interpolado esse valor utilizando o MDT.
+                    <p>Desta forma poderam ser calculados os diversos valores necessários.</p>
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/passadeiras.png">
+                <h6><span>Atravessamentos pedonais</span></h6>
+
+                <aside class="notes">
+                    Na imagem estão destacados os atravessamentos pedonais. A partir de cada segmento que representa um atravessamento foi desenhado um ponto no seu centro. Estes pontos serão usados para atribuir o atraso nos atravessamentos mencionado anteriormente.
+                </aside>
+            </section>
+
+            <section class="page">
+                <h5>Modelação do edificado e do sombreamento</h5>
+                <p>Para representar o verão e o inverno foram escolhidos o dia mais quente e o dia mais frio, respetivamente, no registo dos <span class="color">extremos climáticos</span> para a cidade de Lisboa.</p>
+
+                <aside class="notes">
+                    Para ser possível modelar o sombreamento foi necessário primeiro modelar o edificado. Para o sombreamento foi considerado que é mais relevante o efeito das estações no peão, neste caso da temperatura. Por essa razão não se utilizaram os solstícios mas sim dois exemplos de extremos climáticos.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/3D.png">
+                <h6><span>Edificado modelado</span></h6>
+
+                <aside class="notes">
+                    A parte da área de estudo com sombreamento modelado é limitada a Norte pela Avenida Elias Garcia e Avenida de António José de Almeida, a Poente pela Rua Marquês Sá da Bandeira, a sul pela Rua Tomás Ribeiro, Rua Almirante Barroso e Rua Pascoal de Melo, e a Nascente pela Avenida Almirante Reis.
+                    <p>O edificado foi modelado através do auxílio de um script de AutoLISP que agilizou a modelação necessária em AutoCAD. Posteriormente o o modelo foi terminado em ArcGIS.</p>
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/3D2.png">
+                <h6><span>Sombreamento modelado - inverno 11h</span></h6>
+
+                <aside class="notes">
+                    Para o dia que representa o inverno foram criados os volumes de sombreamento para cinco momentos do dia: 09h00, 11h00, 13h00, 15h00 e 17h00. Para o dia que representa o verão foram criados seis volumes tendo sido representado adicionalmente o momento das 19h00.
+                    <p>A opção por representar instantes do dia em vez de intervalos de tempo deveu-se a diversos fatores.</p>
+                    <p>O principal razão para esta escolha deveu-se ao facto de os percursos pedonais representados serem sempre curtos devido aos limites da área de estudo, resultando em intervalos de tempo igualmente curtos e em que o movimento do Sol foi ignorado. </p>
+                </aside>
+            </section>
+
+            <section class="chapter" data-background="rgba(0, 157, 224, 1)">
+                <h2>Aplicação do modelo</h2>
+            </section>
+
+            <section class="page">
+                <h3>Declive dos caminhos pedonais</h3>
+                <p>A primeira aplicação que o modelo permite é a análise do declive e qualquer conjunto de caminhos pode ser classificado em função deste.</p>
+            </section>
+
+            <section class="legend" data-background="imgs/decliveLegenda2.png">
+                <h6><span>Declive [%]</span></h6>
+
+                <aside class="notes">
+                    Neste exemplo temos a representação gráfica da rede pedonal em função do seu declive - traduzida em intervalos de declives.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/decliveLegendaMenos2.png">
+                <h6><span>Declive &le; 8%</span></h6>
+
+                <aside class="notes">
+                    Esta representação gráfica pode ser facilmente alterada para melhor representar uma determinada análise. Neste caso podemos visualizar a rede pedonal apenas com segmentos com declive inferior ou igual a 8%.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/decliveLegendaMais2.png">
+                <h6><span>Declive &gt; 8%</span></h6>
+
+                <aside class="notes">
+                    E aqui, os restantes segmentos.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/decliveDonut.png">
+                <h6><span>Declive [%]</span></h6>
+
+                <aside class="notes">
+                    Os dados do declive podem ser retirados e usados para outras análises. Neste slide podemos visualizar a percentagem da rede pedonal para cada intervalo e a percentagem acumulada. Por exemplo, os segmentos com declive inferior ou igual a 8% representa 83,4% da rede pedonal.
+                </aside>
+            </section>
+
+            <section class="page">
+                <h3>Áreas de abrangência pedonal</h3>
+                <p>Podem ser usadas em diversas análises, onde se incluem avaliações de redes de transportes públicos e de localizações de serviços, comércio ou habitacões.</p>
+
+                <aside class="notes">
+                    A partir do modelo criado é possível gerar áreas de abrangência pedonal. Estas traduzem até onde o peão pode chegar a partir de uma certa localização, ou a partir de onde o peão consegue chegar até essa localização.
+                    <p>Podem ser usadas em diversas análises, onde se incluem avaliações de redes de transportes públicos e de localizações de serviços, comércio ou habitacões.</p>
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/SA800m.png">
+                <h6><span class="verde">400m</span> <span class="amarelo">800m</span></h6>
+
+                <aside class="notes">
+                    Neste exemplo, são geradas as áreas de abrangência pedonal da estação de metro do Saldanha. Os pontos amarelos representam os diversos acessos à estação. A verde temos abrangência de 400m, referido em várias fontes como uma distância confortável para os peões. A amarelo temos o dobro.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/SA600s.png">
+                <h6><span>Sem declives</span> <span class="verde">5min</span> <span class="amarelo">10min</span></h6>
+                <p class="small">1,92km<sup>2</sup></p>
+
+                <aside class="notes">
+                    Os 400m e 800m são traduzidos para 5min e 10min, aproximadamente o tempo que essas distâncias demoram a ser percorridas em caminhos sem declives e obstáculos.
+                    <p>Aqui são ignorados os declives e retirada a área que servirá de base de comparação para as restantes áreas de abrangência.</p>
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/SAslopeaway.png">
+                <h6><span>Com declives, sentido saída</span> <span class="verde">5min</span> <span class="amarelo">10min</span> <span class="laranja">base</span></h6>
+
+                <aside class="notes">
+                    Utilizando os tempos de caminhada que resultam do cálculo da velocidade em função dos declives e no sentido de saída da estação. A verde e amarelo continuam a ser representadas as áreas dos 5 e 10min. A laranja está representada a área anterior, que ignorou os declives.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/SAslopetowards.png">
+                <h6><span>Com declives, sentido entrada</span> <span class="verde">5min</span> <span class="amarelo">10min</span> <span class="laranja">base</span></h6>
+
+                <aside class="notes">
+                    A mesma área agora no sentido de entrada da estação. A área é menor visto a zona do Saldanha estar no topo do planalto.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/SAslopeintersect.png">
+                <h6><span>Com declives, interseção</span> <span class="verde">5min</span> <span class="amarelo">10min</span> <span class="laranja">base</span></h6>
+
+                <aside class="notes">
+                    Aqui a interseção das duas anteriores, um resultado mais relevante. As restantes áreas de abrangência pedonal representam sempre a interseção das áreas nos dois sentidos.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/SAslopestairs.png">
+                <h6><span>+Escadas</span> <span class="verde">5min</span> <span class="amarelo">10min</span> <span class="laranja">base</span></h6>
+                <p class="small">1,77km<sup>2</sup> 92%</p>
+
+                <aside class="notes">
+                    A velocidade em segmentos que representam escadas é inferior e foi calculada segundo fontes encontradas.
+                    <p>Adicionando a influência das escadas na velocidade do peão não são visíveis a esta escala mudanças na área desenhada.</p>
+                    <p>Utilizando as velocidades tomadas como reais, em função do declive e escadas, esta área tem apenas 92% da inicial.</p>
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/SAcrossings.png">
+                <h6><span>+Atravessamentos</span> <span class="verde">5min</span> <span class="amarelo">10min</span> <span class="laranja">base</span></h6>
+                <p class="small">1,67km<sup>2</sup> 87%<p>
+
+                <aside class="notes">
+                    Adicionando o atraso definido anteriormente em cada segmento que representa um atravessamento pedonal temos uma nova redução.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/SAdelay.png">
+                <h6><span>+Interior</span> <span class="verde">5min</span> <span class="amarelo">10min</span> <span class="laranja">base</span></h6>
+                <p class="small">1,32km<sup>2</sup> 69%</p>
+
+                <aside class="notes">
+                    Tendo em conta que o peão ainda se desloca no interior da estação, foi desenhado a área a partir do cais da estação e não dos acessos à estação.
+                    <p>Na saída da estação o atraso considerado foi de 100s e no sentido inverso este atraso tomou o valor de 85s, ambos os valores retirados de um trabalho do técnico (Faria, Vasconcelos e Farias, 2010)</p>
+                    <p>Passa a ser visível uma redução considerável na área de abrangência.</p>
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/SAspecial.png">
+                <h6><span>Mobilidade reduzida</span> <span class="verde">5min</span> <span class="amarelo">10min</span> <span class="laranja">base</span></h6>
+                <p class="small">0,86km<sup>2</sup> 45%</p>
+
+                <aside class="notes">
+                    É possível ainda definir perfis de utilizadores segundo as caraterísticas da rede pedonal. Neste exemplo os segmentos com escadas e declives superiores a 8% são ignorados e apenas o acesso à estação com elevador foi utilizado.
+                    <p>É visível mais uma redução na área de abrangência.</p>
+                </aside>
+            </section>
+
+            <section class="page">
+                <h3>Rotas pedonais</h3>
+                <p>Podem ser desenhadas em função da distância, do consumo de oxigénio, do tempo ignorando declives, do tempo em função dos declives e do tempo em função dos declives e escadas.</p>
+
+                <aside class="notes">
+                    Em relação às ferramentas existentes, o modelo criado permite criar rotas com preferências em relação aos declives e sombreamento. Mostra adicionalmente o consumo de oxigénio e energia para a rota criada.
+                    <p>As rotas podem ser desenhadas em função da distância, do consumo de oxigénio, do tempo ignorando declives, do tempo em função dos declives e do tempo em função dos declives e escadas.</p>
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/AC.png">
+                <h6><span>Alameda-Civil, sem declives: 658m 470s</span></h6>
+
+                <aside class="notes">
+                    No primeiro exemplo temos uma rota entre um dos acessos à estação de metro da Alameda e a entrada do Pavilhão de Civil.
+                    <p>Ignorando declives é sugerida a rota visível no ecrã, com cerca de 8min.</p>
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/AC.png">
+                <h6><span>Com declives: 658m 575s <span class="laranja">+105s</span> 154ml/kg 54kcal</span></h6>
+
+                <aside class="notes">
+                    Utilizando o tempo de caminhada em função dos declives é sugerida a mesma rota, mas esta passa a ter cerca de 10min. É visível adicionalmente o consumo de oxigénio e energia previstos.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/ACstairs2.png">
+                <h6><span>+Escadas: 700m <span class="laranja">+42m</span> 595s <span class="laranja">+20s</span> 153ml/kg 54kcal</span></h6>
+
+                <aside class="notes">
+                    Utilizando o tempo de caminhada em função dos declives e escadas é sugerida uma nova rota.
+                </aside>
+
+                <aside class="notes"></aside>
+            </section>
+
+            <section class="legend" data-background="imgs/ACstairs2.png">
+                <h6><span>+Atravessamentos: 700m 610s <span class="laranja">+15s</span> 153ml/kg 54kcal</span></h6>
+
+                <aside class="notes">
+                    Adicionado o atraso correspondente aos atravessamentos de peões é sugerida a mesma rota.
+                    <p>De notar que os consumos de oxigénio e energia não são alterados, visto não ser calculado o efeito das paragens e arranques.</p>
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/ACstairs2.png">
+                <h6><span>Civil-Alameda: 700m 486s <span class="laranja">-124s</span> 111ml/kg <span class="laranja">-42ml/kg</span> 39kcal <span class="laranja">-15kcal</span></span></h6>
+
+                <aside class="notes">Trocando a origem e destino é sugerida a mesma rota mas o tempo é menor, cerca de 8min, visto a velocidade de caminhada ser maior no sentido da descida. Como consequência da diminuição do tempo de caminhada, os consumos de oxigénio e energia descem também.</aside>
+            </section>
+
+            <section class="legend" data-background="imgs/AChigh2.png">
+                <h6><span>Declives penalizados: 876m <span class="laranja">+176m</span> 738s <span class="laranja">+128s</span> 186ml/kg <span class="laranja">+33ml/kg</span> 65kcal <span class="laranja">+11kcal</span></span></h6>
+
+                <aside class="notes">Adicionando uma penalização aos declives superiores a 8% é sugerida uma nova rota com cerca de 12min. Simula preferências em relação aos declives.</aside>
+            </section>
+
+            <section class="legend" data-background="imgs/GoogleAC.png">
+                <h6><span>Rotas sugeridas pelo Google Maps</span></h6>
+
+                <aside class="notes">
+                    A rota mais curta sugerida pelo Google e visível a azul, não foi sugerida pelo modelo criado visto utilizar uma atravessamento informal não modelado. A rota sugerida pelo modelo é avaliada pelo Google com a mesma distância e os mesmos tempos de subida e descida, 10 e 8min respetivamente.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/CVEn.png">
+                <h6><span>Conde Valbom-Estefânia: 1303m 988s 243ml/kg 85kcal</span></h6>
+
+                <aside class="notes">
+                    No segundo exemplo, uma rota entre a Avenida Conde de Valbom e a Rua Dona Estefânia. Visível a laranja a rota sugerida em função dos declives, escadas e atravessamentos pedonais.
+                    <p>A rota sugerida pelo Google tem um desenho muito semelhante e a apresenta a mesma distância e tempo de caminhada - cerca de 16min.</p>
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/CVEi09n.png">
+                <h6><span>Inverno 09h: 1365m <span class="color">+62m</span> 1033s <span class="color">+45s</span> 255ml/kg <span class="color">+12ml/kg</span> 89kcal <span class="color">+4kcal</span></span> <span class="amarelo">sol</span> <span class="cinzento">parcial</span></h6>
+
+                <aside class="notes">
+                    Esta rota e as seguintes são influenciadas pelos diversos momentos de sombreamento modelados.
+                    <p>A azul a rota sugerida e a laranja a rota que ignora sombra e sol como comparação. A amarelo estão representados os caminhos ao Sol, a preto os caminhos à sombra e a cinzento os caminhos parcialmente à sombra - resultado do método utilizado no trabalho para identificar os caminhos em relação ao sombreamento modelado.</p>
+                    <p>No inverno são penalizados os caminhos à sombra. Esta primeira rota é para as 09h. Na legenda a azul temos a diferença nos valores calculados em relação à rota laranja.</p>
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/CVEi09hn.png">
+                <h6><span>+Penalizada: 1474m <span class="color">+172m</span> 1134s <span class="color">+146s</span> 275ml/kg <span class="color">+32ml/kg</span> 96kcal <span class="color">+11kcal</span></span> <span class="amarelo">sol</span> <span class="cinzento">parcial</span></h6>
+
+                <aside class="notes">
+                    Ainda para o dia de inverno às 09h foi aumentada a penalização para a sombra e foi sugerida uma nova rota que procurou o Sol na Avenida Casal Ribeiro.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/CVEi11n.png">
+                <h6><span>Inverno 11h: 1350m <span class="color">+47m</span> 1038s <span class="color">+50s</span> 252ml/kg <span class="color">+9ml/kg</span> 88kcal <span class="color">+3kcal</span></span> <span class="amarelo">sol</span> <span class="cinzento">parcial</span></h6>
+
+                <aside class="notes">
+                    Mantendo a penalização original e para as 11h é sugerida uma nova rota. A laranja continua a ser visível a rota que ignora o sol e sombra.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/CVEi13n.png">
+                <h6><span>Inverno 13h: 1322m <span class="color">+19m</span> 1012s <span class="color">+24s</span> 246ml/kg <span class="color">+3ml/kg</span> 86kcal <span class="color">+1kcal</span></span> <span class="amarelo">sol</span> <span class="cinzento">parcial</span></h6>
+
+                <aside class="notes">
+                    Para as 13h é sugerida uma rota que procura o sol na Praça Duque de Saldanha.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/CVEi15n.png">
+                <h6><span>Inverno 15h: 1413m <span class="color">+110m</span> 1076s <span class="color">+88s</span> 265ml/kg <span class="color">+22ml/kg</span> 93kcal <span class="color">+8kcal</span></span> <span class="amarelo">sol</span> <span class="cinzento">parcial</span></h6>
+
+                <aside class="notes">
+                    Às 15h é procurado o sol no lado nascente da Avenida da República.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/CVEi17n.png">
+                <h6><span>Inverno 17h: 1303m 988s 243ml/kg 85kcal</span> <span class="amarelo">sol</span> <span class="cinzento">parcial</span></h6>
+
+                <aside class="notes">
+                    Às 17h não existem alterações à rota inicial visto a maior parte dos caminhos estarem à sombra.
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/CVEv09n.png">
+                <h6><span>Verão 09h: 1421m <span class="color">+18m</span> 1082s <span class="color">+96s</span> 267ml/kg <span class="color">+24ml/kg</span> 93kcal <span class="color">+8kcal</span></span> <span class="amarelo">sol</span> <span class="cinzento">parcial</span></h6>
+
+                <aside class="notes">
+                    Para o dia de Verão passam os caminhos ao Sol a sofrer a penalização. A azul é visível o caminho sugerido para as 09h quase sempre à sombra.
+                    <p>A laranja continua a ser visível a rota original e na legenda as diferenças nos valores calculados em relação a essa rota.</p>
+                </aside>
+            </section>
+
+            <section class="legend" data-background="imgs/CVEv11n.png">
+                <h6><span>Verão 11h: 1347m <span class="color">+44m</span> 1022s <span class="color">+34s</span> 252ml/kg <span class="color">+12ml/kg</span> 88kcal <span class="color">+3kcal</span></span> <span class="amarelo">sol</span> <span class="cinzento">parcial</span></h6>
+
+            </section>
+
+            <section class="legend" data-background="imgs/CVEv13n.png">
+                <h6><span>Verão 13h: 1403m <span class="color">+100m</span> 1056s <span class="color">+68s</span> 262ml/kg <span class="color">+19ml/kg</span> 92kcal <span class="color">+7kcal</span></span> <span class="amarelo">sol</span> <span class="cinzento">parcial</span></h6>
+            </section>
+
+            <section class="legend" data-background="imgs/CVEv15n.png">
+                <h6><span>Verão 15h: 1430m <span class="color">+127m</span> 1082s <span class="color">+94s</span> 267ml/kg <span class="color">+24ml/kg</span> 93kcal <span class="color">+8kcal</span></span> <span class="amarelo">sol</span> <span class="cinzento">parcial</span></h6>
+            </section>
+
+            <section class="legend" data-background="imgs/CVEv17n.png">
+                <h6><span>Verão 17h: 1344m <span class="color">+41m</span> 1017s <span class="color">+29s</span> 250ml/kg <span class="color">+7ml/kg</span> 88kcal <span class="color">+3kcal</span></span> <span class="amarelo">sol</span> <span class="cinzento">parcial</span></h6>
+            </section>
+
+            <section class="legend" data-background="imgs/CVEv19n.png">
+                <h6><span>Verão 19h: 1353m <span class="color">+50m</span> 1034s <span class="color">+46s</span> 252ml/kg <span class="color">+9ml/kg</span> 88kcal <span class="color">+3kcal</span></span> <span class="amarelo">sol</span> <span class="cinzento">parcial</span></h6>
+            </section>
+
+            <section class="page">
+                <h3>Sombreamento dos caminhos pedonais</h3>
+                <p>Para além da sua utilização na criação de rotas é possível agrupar dados em função do sombreamento dos caminhos pedonais. </p>
+            </section>
+
+            <section class="legend" data-background="imgs/SolSombra.png">
+                <!--<h6><span><span class="amarelo">sol</span> <span class="cinzento">parcial</span> <span class="cinza">sombra</span></h6>-->
+
+                <aside class="notes">
+                    Um exemplo de uma representação gráfica possível com os dados do sombreamento dos caminhos pedonais.
+                </aside>
+            </section>
+
+            <section class="chapter" data-background="rgba(0, 157, 224, 1)">
+                <h2>Considerações finais</h2>
+
+                <aside class="notes">
+                    O próximo passo necessário será a validação experimental do modelo.
+                    <p>Existem algumas melhorias que podem ser feitas, nomeadamente na caraterização do tempo nos atravessamentos pedonais, o que deve precisar no entanto de um exaustivo levantamento prático. A caraterização do sombreamento da rede pedonal pode melhorar caso entretanto ferramentas testadas, e que não funcionaram, sejam corrigidas. O teste com outras ferramentas disponíveis podem também ajudar a trazer melhorias.</p>
+                    <p>Seria interessante ver aplicações existentes com alguns dos conceitos aqui mostrados.</p>
+                    <p>Este modelo alargado a outra escala pode ser uma ferramenta útil, com especial atenção à Estratégia Nacional para a Promoção da Atividade Física, da Saúde e do Bem-Estar, visto que permite quantificar os gastos energéticos com a caminhada antes da mesma ser realizada, podendo ser uma ferramenta de promoção de atividade física.</p>
+                </aside>
+            </section>
+
+            <!--<section class="page">
+                <h3>Melhoramentos possíveis</h3>
+                <p>Bla bla bla Bla bla bla Bla bla bla Bla bla bla Bla bla bla Bla bla bla Bla bla bla </p>
+            </section>
+
+            <section class="page">
+                <h3>Desenvolvimentos futuros</h3>
+                <p>Bla bla bla Bla bla bla Bla bla bla Bla bla bla Bla bla bla Bla bla bla Bla bla bla </p>
+            </section>-->
+
+            <section class="chapter" data-background="rgba(255, 255, 255, 1)">
+                <h1>Obrigado pela atenção</h1>
+            </section>
+
+
+        </div>
+
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+    <script>
+
+        Reveal.initialize({
+
+            dependencies: [
+
+                { src: 'plugin/notes/notes.js', async: true }
+            ]
+        });
+
+    </script>
 
 </body>
-<h1>jcml</h1>
-<h2>coming soon</h2>
-<h3><a href="https://www.linkedin.com/in/juliocesarluta/" target="_blank">linkedin</a></h3>
-<h3><a href="http://www.11ssslisbon.pt/docs/proceedings/papers/88.pdf" target="_blank">full paper</a> and <a href="sss11/index.html" target="_blank">presentation</a></h3>
-<h3><a href="https://fenix.tecnico.ulisboa.pt/cursos/ma/dissertacao/1691203502342278" target="_blank">thesis</a> and <a href="ap/index.html" target="_blank">presentation</a></h3>
 </html>
