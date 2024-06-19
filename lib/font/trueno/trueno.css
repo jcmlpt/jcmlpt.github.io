@@ -1,0 +1,20 @@
+@font-face {
+    font-family: 'truenobold';
+    src: url('truenobd-webfont.woff2') format('woff2'),
+    url('truenobd-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal; }
+
+@font-face {
+    font-family: 'truenoextrabold';
+    src: url('truenoexbd-webfont.woff2') format('woff2'),
+    url('truenoexbd-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal; }
+
+@font-face {
+    font-family: 'truenoregular';
+    src: url('truenorg-webfont.woff2') format('woff2'),
+    url('truenorg-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal; }
